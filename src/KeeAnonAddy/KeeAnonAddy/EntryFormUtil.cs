@@ -65,8 +65,6 @@ namespace KeeAnonAddy
 
         internal void AddIdFrom(AnonAddyEntry anonAddyEntry)
         {
-            MessageBox.Show(anonAddyEntry.Id?.ToString());
-
             if (anonAddyEntry.Id != null)
             {
                 var protectedId = new ProtectedString(false, anonAddyEntry.Id.ToString());
