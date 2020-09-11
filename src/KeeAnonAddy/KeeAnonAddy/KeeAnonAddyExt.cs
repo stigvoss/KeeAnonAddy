@@ -19,6 +19,7 @@ namespace KeeAnonAddy
     {
         private Func<string> accessTokenFactory;
         private IPluginHost host;
+        private AnonAddyConfig config = new AnonAddyConfig();
 
         public override bool Initialize(IPluginHost host)
         {
@@ -54,12 +55,12 @@ namespace KeeAnonAddy
             {
                 SearchInStringNames = true,
                 ComparisonMode = StringComparison.InvariantCultureIgnoreCase,
-                SearchString = "x-aa-api-token"
+                SearchString = config.AccessTokenStringKey
             }, results);
 
-            PwEntry entry = results.FirstOrDefault(e => e.Strings.Exists("x-aa-api-token"));
+            PwEntry entry = results.FirstOrDefault(e => e.Strings.Exists(config.AccessTokenStringKey));
 
-            return entry?.Strings.Get("x-aa-api-token");
+            return entry?.Strings.Get(config.AccessTokenStringKey);
         }
 
         private void OnWindowAppeared(object sender, GwmWindowEventArgs eventArgs)

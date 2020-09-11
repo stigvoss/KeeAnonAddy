@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AnonAddyEntry.cs" />
     <Compile Include="AnonAddyService.cs" />
+    <Compile Include="AnonAddyConfig.cs" />
     <Compile Include="CreateAddressMenuItem.cs" />
     <Compile Include="EntryFormUtil.cs" />
     <Compile Include="IMenuItem.cs" />
