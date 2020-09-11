@@ -18,7 +18,6 @@ namespace KeeAnonAddy
     public class KeeAnonAddyExt : Plugin
     {
         private Func<string> accessTokenFactory;
-        private IPluginHost host;
         private AnonAddyConfig config = new AnonAddyConfig();
 
         public override bool Initialize(IPluginHost host)
@@ -27,8 +26,6 @@ namespace KeeAnonAddy
             {
                 return false;
             }
-
-            this.host = host;
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             GlobalWindowManager.WindowAdded += OnWindowAppeared;
