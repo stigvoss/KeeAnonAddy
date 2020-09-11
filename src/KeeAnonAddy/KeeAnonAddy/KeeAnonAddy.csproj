@@ -50,6 +50,7 @@
     <Compile Include="AnonAddyService.cs" />
     <Compile Include="CreateAddressMenuItem.cs" />
     <Compile Include="EntryFormUtil.cs" />
+    <Compile Include="IMenuItem.cs" />
     <Compile Include="KeeAnonAddyExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
