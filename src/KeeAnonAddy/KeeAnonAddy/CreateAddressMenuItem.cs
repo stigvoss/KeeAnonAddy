@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace KeeAnonAddy
 {
-    internal class CreateAddressMenuItem
+    internal class CreateAddressMenuItem : IMenuItem
     {
         private readonly ToolStripMenuItem menuItem;
 

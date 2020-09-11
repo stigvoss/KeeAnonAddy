@@ -19,7 +19,7 @@ namespace KeeAnonAddy
             this.form = form;
         }
 
-        internal void Add(CreateAddressMenuItem menuItem)
+        internal void Add(IMenuItem menuItem)
         {
             var item = menuItem.ToToolStripItem();
             AddMenuItemAfter("m_ctxToolsUrlSelDoc", item);
