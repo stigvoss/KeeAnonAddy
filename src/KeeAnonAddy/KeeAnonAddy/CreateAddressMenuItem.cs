@@ -10,7 +10,7 @@ namespace KeeAnonAddy
 
         public CreateAddressMenuItem()
         {
-            menuItem = new ToolStripMenuItem
+            this.menuItem = new ToolStripMenuItem
             {
                 Name = "m_ctxToolsAnonAddyAddress",
                 Text = "User Name Field: AnonAddy UUID Address"
@@ -19,15 +19,15 @@ namespace KeeAnonAddy
 
         internal void OnClick(Func<Task> onClick)
         {
-            menuItem.Click += async (sender, args) =>
+            this.menuItem.Click += async (sender, args) =>
             {
-                await onClick?.Invoke();
+                await onClick.Invoke();
             };
         }
 
         public ToolStripItem ToToolStripItem()
         {
-            return menuItem;
+            return this.menuItem;
         }
     }
 }

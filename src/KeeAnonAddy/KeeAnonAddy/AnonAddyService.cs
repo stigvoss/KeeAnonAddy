@@ -8,28 +8,28 @@ namespace KeeAnonAddy
 {
     internal class AnonAddyService
     {
-        private readonly Func<string> accessTokenFactory;
+        private readonly Func<string>? accessTokenFactory;
 
         enum AnonAddyRequestType
         {
             Uuid
         }
 
-        public AnonAddyService(Func<string> accessTokenFactory)
+        public AnonAddyService(Func<string>? accessTokenFactory)
         {
             this.accessTokenFactory = accessTokenFactory;
         }
 
-        internal async Task<AnonAddyEntry> RequestAddress(string description)
+        internal async Task<AnonAddyEntry> RequestAddress(string? description)
         {
-            var client = new WebClient();
+            WebClient client = new();
 
-            var accessToken = accessTokenFactory.Invoke();
+            string? accessToken = this.accessTokenFactory?.Invoke();
 
             const string url = "https://app.anonaddy.com/api/v1/aliases";
             string entryDescription = string.IsNullOrWhiteSpace(description)
                 ? "Created from KeePass."
-                : description;
+                : description!;
 
             string body = TemplateRequest(AnonAddyRequestType.Uuid, entryDescription);
 
@@ -45,7 +45,7 @@ namespace KeeAnonAddy
             return new AnonAddyEntry(id, address);
         }
 
-        private Guid? GetIdFrom(string responseBody)
+        private static Guid? GetIdFrom(string responseBody)
         {
             var charStream = new CharStream(responseBody);
             var json = new JsonObject(charStream);
@@ -54,7 +54,7 @@ namespace KeeAnonAddy
 
             var id = data.GetValue<string>("id");
 
-            if (Guid.TryParse(id, out var uuid))
+            if (Guid.TryParse(id, out Guid uuid))
             {
                 return uuid;
             }
@@ -62,7 +62,7 @@ namespace KeeAnonAddy
             return null;
         }
 
-        private string GetAddressFrom(string responseBody)
+        private static string GetAddressFrom(string responseBody)
         {
             var charStream = new CharStream(responseBody);
             var json = new JsonObject(charStream);
@@ -72,7 +72,7 @@ namespace KeeAnonAddy
             return data.GetValue<string>("email");
         }
 
-        private string TemplateRequest(AnonAddyRequestType requestType, string description)
+        private static string TemplateRequest(AnonAddyRequestType requestType, string description)
         {
             switch (requestType)
             {

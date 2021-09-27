@@ -6,21 +6,17 @@ using KeePassLib;
 using KeePassLib.Collections;
 using KeePassLib.Security;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace KeeAnonAddy
 {
     public class KeeAnonAddyExt : Plugin
     {
-        private Func<string> accessTokenFactory;
-        private AnonAddyConfig config = new AnonAddyConfig();
+        private Func<string>? accessTokenFactory = null;
+        private readonly AnonAddyConfig config = new AnonAddyConfig();
 
-        public override bool Initialize(IPluginHost host)
+        public override bool Initialize(IPluginHost? host)
         {
             if (host == null)
             {
@@ -36,15 +32,15 @@ namespace KeeAnonAddy
 
         private void OnDatabaseOpened(object sender, FileOpenedEventArgs eventArgs)
         {
-            ProtectedString accessToken = FindAccessTokenIn(eventArgs.Database);
+            ProtectedString? accessToken = FindAccessTokenIn(eventArgs.Database);
 
             if (accessToken != null)
             {
-                accessTokenFactory = () => accessToken.ReadString();
+                this.accessTokenFactory = () => accessToken.ReadString();
             }
         }
 
-        private ProtectedString FindAccessTokenIn(PwDatabase database)
+        private ProtectedString? FindAccessTokenIn(PwDatabase database)
         {
             var results = new PwObjectList<PwEntry>();
 
@@ -52,38 +48,40 @@ namespace KeeAnonAddy
             {
                 SearchInStringNames = true,
                 ComparisonMode = StringComparison.InvariantCultureIgnoreCase,
-                SearchString = config.AccessTokenStringKey
+                SearchString = this.config.AccessTokenStringKey
             }, results);
 
-            PwEntry entry = results.FirstOrDefault(e => e.Strings.Exists(config.AccessTokenStringKey));
+            PwEntry? entry = results.FirstOrDefault(e => e.Strings.Exists(this.config.AccessTokenStringKey));
 
-            return entry?.Strings.Get(config.AccessTokenStringKey);
+            return entry?.Strings.Get(this.config.AccessTokenStringKey);
         }
 
         private void OnWindowAppeared(object sender, GwmWindowEventArgs eventArgs)
         {
-            if (eventArgs.Form is PwEntryForm pwEntryForm)
+            if (eventArgs.Form is not PwEntryForm pwEntryForm)
             {
-                var formUtil = new EntryFormUtil(pwEntryForm);
+                return;
+            }
 
-                var menuItem = new CreateAddressMenuItem();
+            var formUtil = new EntryFormUtil(pwEntryForm);
 
-                menuItem.OnClick(async () =>
-                {
-                    string description = formUtil.GetTitle();
+            var menuItem = new CreateAddressMenuItem();
 
-                    var service = new AnonAddyService(this.accessTokenFactory);
+            menuItem.OnClick(async () =>
+            {
+                string? description = formUtil.GetTitle();
 
-                    AnonAddyEntry anonAddyEntry = await service.RequestAddress(description);
+                var service = new AnonAddyService(this.accessTokenFactory);
 
-                    formUtil.PopulateUserNameFieldWith(anonAddyEntry);
-                    formUtil.AddIdFrom(anonAddyEntry);
-                });
+                AnonAddyEntry anonAddyEntry = await service.RequestAddress(description);
 
-                if (accessTokenFactory != null)
-                {
-                    formUtil.Add(menuItem);
-                }
+                formUtil.PopulateUserNameFieldWith(anonAddyEntry);
+                formUtil.AddIdFrom(anonAddyEntry);
+            });
+
+            if (this.accessTokenFactory != null)
+            {
+                formUtil.Add(menuItem);
             }
         }
     }

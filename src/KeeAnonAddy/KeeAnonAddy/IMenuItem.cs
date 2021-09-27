@@ -1,4 +1,6 @@
-﻿namespace KeeAnonAddy
+﻿using System.Windows.Forms;
+
+namespace KeeAnonAddy
 {
     internal interface IMenuItem
     {

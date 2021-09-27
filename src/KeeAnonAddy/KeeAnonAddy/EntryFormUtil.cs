@@ -1,11 +1,6 @@
 ﻿using KeePass.Forms;
-using KeePass.Plugins;
 using KeePassLib.Security;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace KeeAnonAddy
@@ -39,13 +34,13 @@ namespace KeeAnonAddy
             }
         }
 
-        internal string GetTitle()
+        internal string? GetTitle()
         {
-            var titleControl = GetControlByKey("m_tbTitle");
+            Control? titleControl = GetControlByKey("m_tbTitle");
             return titleControl?.Text;
         }
 
-        private Control GetControlByKey(string controlKey)
+        private Control? GetControlByKey(string controlKey)
         {
             Control[] controls = this.form.Controls.Find(controlKey, true);
 
@@ -54,13 +49,13 @@ namespace KeeAnonAddy
 
         internal void PopulateUserNameFieldWith(AnonAddyEntry anonAddyEntry)
         {
-            var userNameControl = GetControlByKey("m_tbUserName");
+            Control? userNameControl = GetControlByKey("m_tbUserName");
             if (userNameControl != null)
             {
                 userNameControl.Text = anonAddyEntry.MailAddress.Address;
             }
 
-            form.EntryRef.Touch(true, false);
+            this.form.EntryRef.Touch(true, false);
         }
 
         internal void AddIdFrom(AnonAddyEntry anonAddyEntry)
@@ -68,10 +63,10 @@ namespace KeeAnonAddy
             if (anonAddyEntry.Id != null)
             {
                 var protectedId = new ProtectedString(false, anonAddyEntry.Id.ToString());
-                form.EntryStrings.Set("x-aa-id", protectedId);
+                this.form.EntryStrings.Set("x-aa-id", protectedId);
             }
 
-            form.EntryRef.Touch(true, false);
+            this.form.EntryRef.Touch(true, false);
         }
     }
 }
